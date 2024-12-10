@@ -11526,11 +11526,11 @@ static void ImGui::NavUpdate()
         //for (ImGuiKey key : nav_keyboard_keys_to_change_source)
         //    if (IsKeyDown(key))
         //        g.NavInputSource = ImGuiInputSource_Keyboard;
-		nav_arraySize = sizeof(nav_gamepad_keys_to_change_source)/sizeof(nav_gamepad_keys_to_change_source[0]);
+		nav_arraySize = sizeof(nav_keyboard_keys_to_change_source)/sizeof(nav_keyboard_keys_to_change_source[0]);
 		for (int i = 0; i < nav_arraySize; i++){
-			ImGuiKey key = nav_gamepad_keys_to_change_source[i];
+			ImGuiKey key = nav_keyboard_keys_to_change_source[i];
             if (IsKeyDown(key))
-                g.NavInputSource = ImGuiInputSource_Gamepad;
+                g.NavInputSource = ImGuiInputSource_Keyboard;
 		}
 
     // Process navigation init request (select first/default focus)
@@ -15361,18 +15361,15 @@ static void ImGui::DockNodeMoveWindows(ImGuiDockNode* dst_node, ImGuiDockNode* s
         DockNodeAddWindow(dst_node, window, !move_tab_bar);
     }
 	*/
-	//ImVector<ImGuiWindow *> srcWindows = src_node->Windows;
-	//int win_arraySize = sizeof(srcWindows)/sizeof(srcWindows[0]);
-	int win_arraySize = sizeof(src_node->Windows)/sizeof(src_node->Windows[0]);
+	int win_arraySize = src_node->Windows.Size;
 	for (int i = 0; i < win_arraySize; i++){
-		//ImGuiWindow* window = srcWindows[i];
 		ImGuiWindow* window = src_node->Windows[i];
-        window->DockNode = NULL;
-        window->DockIsActive = false;
-        DockNodeAddWindow(dst_node, window, !move_tab_bar);
+		window->DockNode = NULL;
+		window->DockIsActive = false;
+		DockNodeAddWindow(dst_node, window, !move_tab_bar);
 	}
     src_node->Windows.clear();
-
+	
     if (!move_tab_bar && src_node->TabBar)
     {
         if (dst_node->TabBar)
